@@ -1,7 +1,7 @@
 from copy import copy
 
 from raylib.colors import WHITE
-from raylib.static import LoadTexture, DrawTextureRec
+from raylib.static import DrawTexturePro
 
 from .helper import Vector2, Rectangle
 
@@ -9,28 +9,51 @@ ENTITIES = []
 
 
 class Entity:
-    def __init__(self, spritesheet, w_frame, h_frame, count, pos=Vector2(), hitbox=Rectangle()):
-        self.spritesheet = LoadTexture(spritesheet.encode())
-        self.single_frame = Rectangle(width=w_frame, height=h_frame)
-        self.frames_num = count
-        self.current_frame = copy(self.single_frame)
-        self.current_frame_num = 1
+    def __init__(self, sprite, pos=Vector2()):
+        self.sprite = sprite
         self.pos = pos
-        self.hitbox = hitbox
-        self._frame_pos = pos
 
-    def drawIdle(self):
-        DrawTextureRec(self.spritesheet, self.single_frame(), self.pos(), WHITE)
+    def draw_idle(self, angle=0):
+        ox = (0 % self.sprite.frames_wide) * self.sprite.frame_size.x
+        oy = int(0 / self.sprite.frames_wide) * self.sprite.frame_size.y
+        DrawTexturePro(self.sprite.texture,
+                       Rectangle(ox,
+                                 oy,
+                                 self.sprite.frame_size.x,
+                                 self.sprite.frame_size.y
+                                 )(),
+                       Rectangle(self.pos.x,
+                                 self.pos.y,
+                                 self.sprite.frame_size.x * self.sprite.scale,
+                                 self.sprite.frame_size.y * self.sprite.scale
+                                 )(),
+                       Vector2(self.sprite.origin.x * self.sprite.scale,
+                               self.sprite.origin.y * self.sprite.scale
+                               )(),
+                       angle,
+                       WHITE
+        )
+        if self.sprite.frame != 1:
+            self.sprite.frame = 1
 
-    def draw(self):
-        if self.current_frame_num >= self.frames_num:
-            self.current_frame_num = 1
-            self.current_frame = copy(self.single_frame)
-            self._frame_pos = copy(self.pos)
-        else:
-            self.current_frame_num += 1
-            self.current_frame += self.single_frame
-            self._frame_pos.x += self.pos.x
-        print(self._frame_pos)
-        DrawTextureRec(self.spritesheet, self.current_frame(), self._frame_pos(),
-                       WHITE)
+    def draw(self, angle=0):
+        ox = (self.sprite.frame % self.sprite.frames_wide) * self.sprite.frame_size.x
+        oy = int(self.sprite.frame / self.sprite.frames_wide) * self.sprite.frame_size.y
+        DrawTexturePro(self.sprite.texture,
+                       Rectangle(ox,
+                                 oy,
+                                 self.sprite.frame_size.x,
+                                 self.sprite.frame_size.y
+                                 )(),
+                       Rectangle(self.pos.x,
+                                 self.pos.y,
+                                 self.sprite.frame_size.x * self.sprite.scale,
+                                 self.sprite.frame_size.y * self.sprite.scale
+                                 )(),
+                       Vector2(self.sprite.origin.x * self.sprite.scale,
+                               self.sprite.origin.y * self.sprite.scale
+                               )(),
+                       angle,
+                       WHITE
+        )
+        self.sprite.next_frame()

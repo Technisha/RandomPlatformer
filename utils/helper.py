@@ -1,3 +1,4 @@
+from raylib.static import LoadTexture
 from raylib.pyray import PyRay
 
 pyray = PyRay()
@@ -106,6 +107,27 @@ class Rectangle:
 
     def __mod__(self, other):
         return Rectangle(self.x % other.x, self.y % other.y, self.width % other.width, self.height % other.height)
+
+
+class Sprite:
+    def __init__(self, texture, frame_size, max_frame, frames_wide, calls_per_frame, scale=1):
+        self.texture = LoadTexture(texture.encode())
+        self.frame_size = frame_size
+        self.max_frame = max_frame
+        self.frames_wide = frames_wide
+        self.origin = Vector2(frame_size.x / 2, frame_size.y / 2)
+        self.scale = scale
+        self.calls_per_frame = calls_per_frame
+        self.frame = 0
+        self.calls = 0  # Amount of times this has been called
+
+    def next_frame(self):
+        if self.calls >= self.calls_per_frame:
+            self.calls = 0
+            self.frame += 1
+            if self.frame >= 5000:
+                self.frame = 0
+        self.calls += 1
 
 
 class Screen:

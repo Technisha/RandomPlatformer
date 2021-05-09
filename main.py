@@ -2,7 +2,7 @@ from sys import argv
 
 from raylib.static import *
 
-from utils.helper import Screen, Fps, Vector2
+from utils.helper import Screen, Fps, Sprite, Vector2
 from utils.entities import Entity
 
 for arg in argv:
@@ -20,7 +20,7 @@ except IndexError:
 SetTargetFPS(Fps.cap)
 InitWindow(Screen.width, Screen.height, b"Test Platformer")
 
-player = Entity('assets/player/walk.png', 64, 234, 4, Vector2(424, 230))
+player = Entity(Sprite('assets/player/walk.png', Vector2(64, 234), 4, 4, 12, 0.35), Vector2(424, 230))
 
 while not WindowShouldClose():
     BeginDrawing()
