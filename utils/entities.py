@@ -1,7 +1,7 @@
 from copy import copy
 
 from raylib.colors import WHITE
-from raylib.static import LoadTexture, DrawTextureTiled
+from raylib.static import LoadTexture, DrawTextureRec
 
 from .helper import Vector2, Rectangle
 
@@ -9,24 +9,28 @@ ENTITIES = []
 
 
 class Entity:
-    def __init__(self, spritesheet, width, height, x_frames, y_frames, pos=Vector2(), hitbox=Rectangle()):
+    def __init__(self, spritesheet, w_frame, h_frame, count, pos=Vector2(), hitbox=Rectangle()):
         self.spritesheet = LoadTexture(spritesheet.encode())
-        self.width = width
-        self.height = height
-        self.single_frame = Rectangle(x=self.width / x_frames, y=self.height / y_frames, width=self.width / x_frames,
-                                      height=self.height / y_frames)
-        self.frames_num = x_frames * y_frames
+        self.single_frame = Rectangle(width=w_frame, height=h_frame)
+        self.frames_num = count
         self.current_frame = copy(self.single_frame)
         self.current_frame_num = 1
-        self.pos = Rectangle(width=pos.x, height=pos.y)
+        self.pos = pos
         self.hitbox = hitbox
+        self._frame_pos = pos
 
     def drawIdle(self):
-        DrawTextureTiled(self.spritesheet, self.single_frame(), self.hitbox(), self.pos(), 0, 1, WHITE)
+        DrawTextureRec(self.spritesheet, self.single_frame(), self.pos(), WHITE)
 
     def draw(self):
-        DrawTextureTiled(self.spritesheet, self.current_frame(), self.pos(), Vector2(self.pos.x, self.pos.y)(), 0, 1, WHITE)
         if self.current_frame_num >= self.frames_num:
             self.current_frame_num = 1
+            self.current_frame = copy(self.single_frame)
+            self._frame_pos.x = self.pos.x
         else:
             self.current_frame_num += 1
+            self.current_frame += self.single_frame
+            self._frame_pos.x -= self.pos.x
+        print(self._frame_pos)
+        DrawTextureRec(self.spritesheet, self.current_frame(), self._frame_pos(),
+                       WHITE)

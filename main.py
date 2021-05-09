@@ -20,7 +20,7 @@ except IndexError:
 SetTargetFPS(Fps.cap)
 InitWindow(Screen.width, Screen.height, b"Test Platformer")
 
-player = Entity('assets/player/walk.png', 256, 234, 4, 1, Vector2(424, 230))
+player = Entity('assets/player/walk.png', 64, 234, 4, Vector2(424, 230))
 
 while not WindowShouldClose():
     BeginDrawing()
