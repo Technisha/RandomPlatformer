@@ -253,3 +253,4 @@ Thumbs.db
 main
 main.c
 compile.sh
+.idea/
