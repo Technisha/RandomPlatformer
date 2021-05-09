@@ -118,6 +118,7 @@ class Sprite:
         self.origin = Vector2(frame_size.x / 2, frame_size.y / 2)
         self.scale = scale
         self.calls_per_frame = calls_per_frame
+        self.flipped = False
         self.frame = 0
         self.calls = 0  # Amount of times this has been called
 
