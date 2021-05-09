@@ -17,17 +17,22 @@ class Entity:
     def draw_idle(self, angle=0):
         ox = (0 % self.sprite.frames_wide) * self.sprite.frame_size.x
         oy = int(0 / self.sprite.frames_wide) * self.sprite.frame_size.y
+        if self.sprite.flipped:
+            frame_size_x = -self.sprite.frame_size.x
+        else:
+            frame_size_x = self.sprite.frame_size.x
+        self.hitbox = Rectangle(self.pos.x,
+                                self.pos.y,
+                                self.sprite.frame_size.x * self.sprite.scale,
+                                self.sprite.frame_size.y * self.sprite.scale
+                                )()
         DrawTexturePro(self.sprite.texture,
                        Rectangle(ox,
                                  oy,
-                                 self.sprite.frame_size.x,
+                                 frame_size_x,
                                  self.sprite.frame_size.y
                                  )(),
-                       Rectangle(self.pos.x,
-                                 self.pos.y,
-                                 self.sprite.frame_size.x * self.sprite.scale,
-                                 self.sprite.frame_size.y * self.sprite.scale
-                                 )(),
+                       self.hitbox,
                        Vector2(self.sprite.origin.x * self.sprite.scale,
                                self.sprite.origin.y * self.sprite.scale
                                )(),
@@ -41,20 +46,21 @@ class Entity:
         ox = (self.sprite.frame % self.sprite.frames_wide) * self.sprite.frame_size.x
         oy = int(self.sprite.frame / self.sprite.frames_wide) * self.sprite.frame_size.y
         if self.sprite.flipped:
-            pass
+            frame_size_x = -self.sprite.frame_size.x
         else:
-            pass
+            frame_size_x = self.sprite.frame_size.x
+        self.hitbox = Rectangle(self.frame_pos.x,
+                                self.frame_pos.y,
+                                self.sprite.frame_size.x * self.sprite.scale,
+                                self.sprite.frame_size.y * self.sprite.scale
+                                )()
         DrawTexturePro(self.sprite.texture,
                        Rectangle(ox,
                                  oy,
-                                 self.sprite.frame_size.x,
+                                 frame_size_x,
                                  self.sprite.frame_size.y
                                  )(),
-                       Rectangle(self.frame_pos.x,
-                                 self.frame_pos.y,
-                                 self.sprite.frame_size.x * self.sprite.scale,
-                                 self.sprite.frame_size.y * self.sprite.scale
-                                 )(),
+                       self.hitbox,
                        Vector2(self.sprite.origin.x * self.sprite.scale,
                                self.sprite.origin.y * self.sprite.scale
                                )(),
