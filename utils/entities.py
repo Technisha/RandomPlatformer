@@ -26,11 +26,11 @@ class Entity:
         if self.current_frame_num >= self.frames_num:
             self.current_frame_num = 1
             self.current_frame = copy(self.single_frame)
-            self._frame_pos.x = self.pos.x
+            self._frame_pos = copy(self.pos)
         else:
             self.current_frame_num += 1
             self.current_frame += self.single_frame
-            self._frame_pos.x -= self.pos.x
+            self._frame_pos.x += self.pos.x
         print(self._frame_pos)
         DrawTextureRec(self.spritesheet, self.current_frame(), self._frame_pos(),
                        WHITE)
