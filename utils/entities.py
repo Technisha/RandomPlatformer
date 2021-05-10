@@ -1,7 +1,7 @@
 from copy import copy
 
 from raylib.colors import WHITE
-from raylib.static import DrawTexturePro
+from raylib.static import *
 
 from .helper import Vector2, Rectangle
 
@@ -13,6 +13,10 @@ class Entity:
         self.sprite = sprite
         self.pos = pos
         self.frame_pos = pos
+        ENTITIES.append(self)
+
+    def unsubscribe(self):
+        ENTITIES.remove(self)
 
     def draw_idle(self, angle=0):
         ox = (0 % self.sprite.frames_wide) * self.sprite.frame_size.x
@@ -68,3 +72,25 @@ class Entity:
                        WHITE
                        )
         self.sprite.next_frame()
+
+    def update(self):
+        pass
+
+
+class Player(Entity):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def update(self):
+        if IsKeyDown(KEY_LEFT) and IsKeyDown(KEY_RIGHT):
+            self.draw_idle()
+        elif IsKeyDown(KEY_LEFT):
+            self.pos.x -= 1
+            self.draw()
+            self.sprite.flipped = True
+        elif IsKeyDown(KEY_RIGHT):
+            self.pos.x += 1
+            self.draw()
+            self.sprite.flipped = False
+        else:
+            self.draw_idle()
